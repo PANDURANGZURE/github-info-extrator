@@ -1,8 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
 
 export default function Home() {
+  // Helper to format repo size (GitHub API returns size in KB)
+  function formatRepoSize(size) {
+    if (size < 1024) return `${size} KB`;
+    if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} MB`;
+    return `${(size / (1024 * 1024)).toFixed(2)} GB`;
+  }
   const [username, setUsername] = useState("");
   const [userData, setUserData] = useState(null);
   const [repos, setRepos] = useState([]);
@@ -17,20 +24,27 @@ export default function Home() {
     setRepos([]);
 
     try {
-      const userRes = await fetch(`https://api.github.com/users/${username}`);
-      if (!userRes.ok) throw new Error("User not found");
-      const user = await userRes.json();
+  const userRes = await fetch(`https://api.github.com/users/${username}`);
+  if (!userRes.ok) throw new Error("User not found");
+  const user = await userRes.json();
 
-      const repoRes = await fetch(`https://api.github.com/users/${username}/repos`);
-      const repoData = await repoRes.json();
+  const repoRes = await fetch(`https://api.github.com/users/${username}/repos`);
+  const repoData = await repoRes.json();
 
-      setUserData(user);
-      setRepos(repoData);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+  // format size before setting repos
+  const reposWithSize = repoData.map(repo => ({
+    ...repo,
+    sizeFormatted: formatRepoSize(repo.size)
+  }));
+
+  setUserData(user);
+  setRepos(reposWithSize);
+
+} catch (err) {
+  setError(err.message);
+} finally {
+  setLoading(false);
+}
   };
 
   return (
@@ -90,41 +104,49 @@ export default function Home() {
 
       {/* Repo Section */}
       {repos.length > 0 && (
-        <div className="grid gap-4 w-full max-w-3xl">
-          <h2 className="text-2xl font-bold text-gray-800">📂 Repositories</h2>
-          {repos.map((repo) => (
-            <div
-              key={repo.id}
-              className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
-            >
-              <a
-                href={repo.html_url}
-                target="_blank"
-                className="text-lg font-semibold text-blue-600 hover:underline"
+        <div className="w-full ">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">📂 Repositories</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {repos.map((repo) => (
+              <div
+                key={repo.id}
+                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
               >
-                {repo.name}
-              </a>
-              <p className="text-gray-600 text-sm mt-2">
-                  {repo.description || "No description provided"}
-                </p>
-              
-              <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-700">
-                  <span>🌐 {repo.language || "N/A"}</span>
-                  <span>⭐ {repo.stargazers_count}</span>
-                  <span>🍴 {repo.forks_count}</span>
-                  <span>👀 {repo.watchers_count}</span>
-                  <span>🐛 {repo.open_issues_count}</span>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Created: {new Date(repo.created_at).toLocaleDateString()} | Updated:{" "}
-                  {new Date(repo.updated_at).toLocaleDateString()}
-                </p>
-                <p className="text-xs text-gray-500">
-                  License: {repo.license?.name || "No license"}
-                </p>
-                <p>{repo.size}</p>
-            </div>
-          ))}
+                <a
+                  href={repo.html_url}
+                  target="_blank"
+                  className="text-lg font-semibold text-blue-600 hover:underline"
+                >
+                  {repo.name}
+                </a>
+                <p className="text-gray-600 text-sm mt-2">
+                    {repo.description || "No description provided"}
+                  </p>
+                
+                <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-700">
+                    <span>🌐 {repo.language || "N/A"}</span>
+                    <span>⭐ {repo.stargazers_count}</span>
+                    <span>🍴 {repo.forks_count}</span>
+                    <span>👀 {repo.watchers_count}</span>
+                    <span>🐛 {repo.open_issues_count}</span>
+                  </div>
+                  <div className="flex justify-between items-end">
+                   <div>
+                     <p className="text-xs text-gray-500 mt-2">
+                    Created: {new Date(repo.created_at).toLocaleDateString()} | Updated:{" "}
+                    {new Date(repo.updated_at).toLocaleDateString()}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    License: {repo.license?.name || "No license"}
+                  </p>
+                  <p>Size: {repo.sizeFormatted}</p>
+                   </div>
+                  <a href={repo.html_url}><div className="flex justify-end text-3xl"><FaGithub /></div></a>
+
+                  </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
