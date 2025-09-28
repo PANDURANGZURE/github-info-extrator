@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
+import RecentRepos from "../components/RecentRepos";
+
+
 
 export default function Home() {
   // Helper to format repo size (GitHub API returns size in KB)
@@ -46,6 +49,8 @@ export default function Home() {
   setLoading(false);
 }
   };
+
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center p-8">
@@ -161,6 +166,8 @@ export default function Home() {
     alt="profile views"
   />
 </div>
+<p>kasodj</p>
+<RecentRepos username={username}/>
     </div>
   );
 }
