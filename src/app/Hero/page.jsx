@@ -87,17 +87,22 @@ export default function Home() {
           <h2 className="text-2xl font-semibold">{userData.name}</h2>
           <p className="text-gray-600">@{userData.login}</p>
           <p className="mt-2">{userData.bio}</p>
-          <div className="flex justify-around mt-4 text-sm font-medium">
+          <div className="">
+            <div className="flex justify-around mt-4 text-sm font-medium">
             <br /><span>👥 {userData.followers} Followers</span>
             <br /><span>➡️ {userData.following} Following</span>
             <br /><span>📦 {userData.public_repos} Repos</span>
             <br /><span>📦 {userData.email} Email</span>
             <br /><span>📦 {userData.blog} Blog</span>
+            
+          </div>
+          <div className="">
             <br /><span>📦 {userData.stargazers_count} Total star</span>
             <br /><span>📦 {userData.location} Location</span>
             <br /><span>📦 {userData.company} Company</span>
             <br /><span>📦 {userData.created_at} created on date</span>
             <br /><span>📦 {userData.updated_at} Last profile update</span>
+          </div>
           </div>
         </div>
       )}
