@@ -20,19 +20,22 @@ export function Main() {
         <div className=" mx-auto p-4 flex justify-center items-center h-full w-full ">
      
           <div>
-            <h1 className="relative z-10 text-lg md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-600 text-center font-sans font-bold">
+            <h1 className="relative z-10 text-lg md:text-7xl  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-400 text-center font-sans font-bold">
             Get a quick peek into any <br />GitHub profile.
           </h1>
           
 
           <p className="text-neutral-500 max-w-lg mx-auto my-2 text-sm text-center relative z-10">
-            Welcome to the site! , This tool is designed to give you a quick and easy way to get information about a GitHub user profile.
+            Welcome to Github Glance ! , This tool is designed to give you a quick and easy way to get information about a GitHub user profile.
           </p>
 
-          <div className="relative z-10 flex justify-center mt-5">
-            <HoverBorderGradient><div className="flex justify-center items-center">
-              <span className="text-lg font-bold font-sans  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">Get Started</span>
-              </div></HoverBorderGradient>
+          <div className="relative z-10 flex justify-center mt-5 gap-5">
+            <Link href='/Hero'><HoverBorderGradient className='hover:scale-105 transition duration-400'><div className="flex justify-center items-center cursor-pointer ">
+              <span className="text-lg font-bold font-sans  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">Profile Info</span>
+              </div></HoverBorderGradient></Link>
+                          <Link href='/GihubRepos'><HoverBorderGradient className='hover:scale-105 transition duration-400'><div className="flex justify-center items-center cursor-pointer">
+              <span className="text-lg font-bold font-sans  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">Repositories  Info</span>
+              </div></HoverBorderGradient></Link>
           </div>
           </div>
         </div>

@@ -2,32 +2,33 @@
 import { useState } from "react";
 
 export default function GithubRepos() {
-  const [link, setLink] = useState(""); // GitHub profile link input
+  const [input, setInput] = useState(""); // Username or profile link
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchRepos = () => {
-    if (!link) return;
-
-    try {
-      // Extract username from link
-      const url = new URL(link);
-      const parts = url.pathname.split("/").filter(Boolean);
-      const username = parts[0]; // first part after github.com/
-
-      if (!username) return;
-
-      setLoading(true);
-      fetch(`https://api.github.com/users/${username}/repos?sort=updated`)
-        .then((res) => res.json())
-        .then((data) => {
-          setRepos(Array.isArray(data) ? data : []);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    } catch (error) {
-      console.error("Invalid GitHub link");
+    let user = input.trim();
+    // If input looks like a link, extract username
+    if (user.startsWith("http")) {
+      try {
+        const url = new URL(user);
+        const parts = url.pathname.split("/").filter(Boolean);
+        user = parts[0] || "";
+      } catch (error) {
+        console.error("Invalid GitHub link");
+        return;
+      }
     }
+    if (!user) return;
+
+    setLoading(true);
+    fetch(`https://api.github.com/users/${user}/repos?sort=updated`)
+      .then((res) => res.json())
+      .then((data) => {
+        setRepos(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   };
 
   return (
@@ -36,10 +37,10 @@ export default function GithubRepos() {
       <div className="flex gap-2 mb-6">
         <input
           type="text"
-          placeholder="Enter GitHub profile link (e.g. https://github.com/octocat)"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          className="flex-1 p-2 border rounded-lg"
+          placeholder="GitHub username or profile link (e.g. octocat or https://github.com/octocat)"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="flex-1 p-2 border rounded-lg text-white"
         />
         <button
           onClick={fetchRepos}
@@ -103,7 +104,7 @@ export default function GithubRepos() {
       )}
 
       {/* No results */}
-      {!loading && repos.length === 0 && link && (
+      {!loading && repos.length === 0 && input && (
         <p className="text-gray-500">No repositories found for this user.</p>
       )}
     </div>

@@ -17,16 +17,16 @@ export default function Header() {
             {/* Navigation */}
             <nav className="flex items-center space-x-6">
               <Link
-                href="/about"
+                href="/Hero"
                 className="hover:text-blue-400 transition"
               >
-                About
+                Profile Info
               </Link>
               <Link
-                href="/contact"
+                href="/GithubRepos"
                 className="hover:text-blue-400 transition"
               >
-                Contact
+                Repositories Info
               </Link>
               <a
                 href="https://github.com/your-username"

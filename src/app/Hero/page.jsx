@@ -104,10 +104,25 @@ export default function Home() {
               >
                 {repo.name}
               </a>
-              <p className="text-gray-700">{repo.description}</p>
-              <div className="flex gap-4 mt-2 text-sm text-gray-500">
-                ⭐ {repo.stargazers_count} | 🍴 {repo.forks_count}
-              </div>
+              <p className="text-gray-600 text-sm mt-2">
+                  {repo.description || "No description provided"}
+                </p>
+              
+              <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-700">
+                  <span>🌐 {repo.language || "N/A"}</span>
+                  <span>⭐ {repo.stargazers_count}</span>
+                  <span>🍴 {repo.forks_count}</span>
+                  <span>👀 {repo.watchers_count}</span>
+                  <span>🐛 {repo.open_issues_count}</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Created: {new Date(repo.created_at).toLocaleDateString()} | Updated:{" "}
+                  {new Date(repo.updated_at).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-gray-500">
+                  License: {repo.license?.name || "No license"}
+                </p>
+                <p>{repo.size}</p>
             </div>
           ))}
         </div>
