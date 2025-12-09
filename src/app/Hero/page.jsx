@@ -58,7 +58,7 @@ export default function Home() {
       <Header/>
       <div className="w-full max-w-5xl mt-4 md:mt-0">
         <header className="mb-6 md:mb-8">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl font-[saurav] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-pink-300 to-yellow-300 text-center">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-[saurav] font-extrabold bg-gradient-to-r text-purple-200 text-center">
             Github Glance
           </h1>
           <p className="text-center text-xs sm:text-sm text-neutral-400 mt-2">Search any GitHub profile and explore repos with a clean, dark UI.</p>
@@ -110,6 +110,9 @@ export default function Home() {
                   <span>Repos: <span className="font-semibold text-white">{userData.public_repos}</span></span>
                 </div>
               </div>
+              <div className=" flex justify-center">
+          <img src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`} alt="profile views" className="" />
+        </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mt-4 md:mt-6 text-xs sm:text-sm text-neutral-300">
@@ -120,6 +123,10 @@ export default function Home() {
             </div>
           </div>
         )}
+
+        <div className="mt-8">
+          <RecentRepos username={username} />
+        </div>
 
         {/* Repo Section */}
         {repos.length > 0 && (
@@ -154,13 +161,9 @@ export default function Home() {
         )}
 
         {/* Profile Views */}
-        <div className="mt-6 md:mt-8 flex justify-center">
-          <img src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`} alt="profile views" className="" />
-        </div>
+        
 
-        <div className="mt-8">
-          <RecentRepos username={username} />
-        </div>
+        
       </div>
     </div>
   );

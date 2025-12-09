@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FaGithub } from "react-icons/fa";
 
 export default function RecentRepos({ username }) {
   const [repos, setRepos] = useState([]);
@@ -51,19 +52,17 @@ export default function RecentRepos({ username }) {
     };
   }, [username]);
 
-  if (!username) return <p className="text-gray-400">Enter a GitHub username to see recent repos.</p>;
-  if (loading) return <p className="text-gray-400">Loading recent repos…</p>;
+  if (!username) return <p className="text-neutral-400 text-sm">Enter a GitHub username to see recent repos.</p>;
+  if (loading) return <p className="text-neutral-400 text-sm">Loading recent repos…</p>;
   if (error)
     return (
-      <div className="text-red-400">
+      <div className="text-rose-400 text-sm">
         <p>Error: {error}</p>
         <button
-          className="mt-2 px-3 py-1 bg-blue-600 text-white rounded"
+          className="mt-2 px-3 py-1 bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white rounded-lg transition text-xs"
           onClick={() => {
-            // retry by re-setting username (will retrigger effect)
             setError(null);
             setLoading(true);
-            // simple refetch by invoking effect: create a microtick reset
             setTimeout(() => setLoading(false), 10);
           }}
         >
@@ -71,33 +70,39 @@ export default function RecentRepos({ username }) {
         </button>
       </div>
     );
-  if (repos.length === 0) return <p className="text-gray-400">No recent repos found for {username}.</p>;
+  if (repos.length === 0) return <p className="text-neutral-400 text-sm">No recent repos found for {username}.</p>;
 
   return (
-    <div className="p-4 bg-neutral-900 rounded-2xl shadow-md w-full max-w-md">
-      <h2 className="text-xl font-semibold text-white mb-4">
-        Recent Committed Repos for <span className="text-blue-400">{username}</span>
+    <div className="w-full">
+      <h2 className="text-lg sm:text-xl font-semibold text-white mb-4">
+        ⏱️ Recently Pushed by <span className="text-indigo-300">{username}</span>
       </h2>
-      <ul className="space-y-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {repos.map((repo) => (
-          <li
+          <a
             key={repo.id}
-            className="p-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 transition"
+            href={repo.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-neutral-800/30 border border-neutral-700/30 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition"
           >
-            <a
-              href={repo.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 font-medium"
-            >
-              {repo.name}
-            </a>
-            <p className="text-sm text-gray-400">
-              Last pushed: {new Date(repo.pushed_at).toLocaleString()}
-            </p>
-          </li>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base md:text-lg font-semibold text-indigo-200 hover:underline break-words">{repo.name}</h3>
+                <p className="text-neutral-400 text-xs md:text-sm mt-1">
+                  Pushed: {new Date(repo.pushed_at).toLocaleDateString()}
+                </p>
+              </div>
+              <FaGithub className="text-neutral-300 flex-shrink-0 text-lg md:text-xl" />
+            </div>
+            <p className="text-neutral-300 text-xs md:text-sm mt-2 line-clamp-2">{repo.description || 'No description'}</p>
+            <div className="flex gap-2 mt-3 text-xs text-neutral-400">
+              <span>⭐ {repo.stargazers_count}</span>
+              <span>🍴 {repo.forks_count}</span>
+            </div>
+          </a>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

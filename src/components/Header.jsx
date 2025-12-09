@@ -31,7 +31,7 @@ export default function Header() {
             Profile Info
           </Link>
           <Link
-            href="/GithubRepos"
+            href="/About"
             className="hover:text-purple-400 text-neutral-300 transition"
           >
             About
@@ -58,7 +58,7 @@ export default function Header() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <nav className="md:hidden bg-neutral-800/90 border-t border-neutral-700/40 px-6 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+        <nav className="md:hidden  px-6 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
           <Link
             href="/Hero"
             onClick={() => setMobileMenuOpen(false)}
@@ -67,7 +67,7 @@ export default function Header() {
             Profile Info
           </Link>
           <Link
-            href="/GithubRepos"
+            href="/About"
             onClick={() => setMobileMenuOpen(false)}
             className="block py-2 hover:text-purple-400 text-neutral-300 transition"
           >
