@@ -121,9 +121,15 @@
 }
 
 @font-face {
-  font-family: "saurav";
-  src: url("/src/fonts/cy-grotesk-wide-heavy.ttf") format("ttf");
-  font-weight: 400;
+  font-family: 'saurav';
+  src: url('/fonts/Awesome.ttf') format('truetype');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
+
+/* provide a CSS utility class so `font-saurav` works even without Tailwind config */
+.font-saurav {
+  font-family: 'saurav', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+}
+
