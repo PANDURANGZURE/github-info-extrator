@@ -1,13 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaGithub } from "react-icons/fa";
 import RecentRepos from "../components/RecentRepos";
 import Header from "@/components/Header";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 
 
 export default function Home() {
+  const titleRef = useRef(null);
+  const headerRef = useRef(null);
+  const searchRef = useRef(null);
+  const repoCardsRef = useRef([]);
+  const profileRef = useRef(null);
+  const statsRef = useRef([]);
+  const profileSectionRef = useRef(null);
+
   // Helper to format repo size (GitHub API returns size in KB)
   function formatRepoSize(size) {
     if (size < 1024) return `${size} KB`;
@@ -19,6 +31,142 @@ export default function Home() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Animate title on page load
+  useEffect(() => {
+    if (titleRef.current) {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
+      );
+    }
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: -10 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.2 }
+      );
+    }
+    if (searchRef.current) {
+      gsap.fromTo(
+        searchRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", delay: 0.4 }
+      );
+    }
+  }, []);
+
+  // Animate repo cards when they appear
+  useEffect(() => {
+    if (repoCardsRef.current.length > 0) {
+      gsap.fromTo(
+        repoCardsRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+        }
+      );
+      
+      // Add hover animations to repo cards
+      repoCardsRef.current.forEach((card) => {
+        if (card) {
+          card.addEventListener("mouseenter", () => {
+            gsap.to(card, {
+              scale: 1.05,
+              boxShadow: "0 0 30px rgba(99, 102, 241, 0.5)",
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              scale: 1,
+              boxShadow: "0 0 0px rgba(99, 102, 241, 0)",
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+        }
+      });
+    }
+  }, [repos]);
+
+  // Animate profile section entrance
+  useEffect(() => {
+    if (profileRef.current) {
+      gsap.fromTo(
+        profileRef.current,
+        { opacity: 0, y: 30, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "back.out(1.7)",
+          scrollTrigger: {
+            trigger: profileRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+  }, [userData]);
+
+  // Animate profile stats with stagger
+  useEffect(() => {
+    if (statsRef.current.length > 0) {
+      gsap.fromTo(
+        statsRef.current,
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: statsRef.current[0]?.parentElement,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }
+  }, [userData]);
+
+  // Scroll trigger animations for other elements
+  useEffect(() => {
+    if (profileSectionRef.current) {
+      ScrollTrigger.create({
+        trigger: profileSectionRef.current,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.fromTo(
+            profileSectionRef.current.querySelectorAll(".stat-box"),
+            { opacity: 0, x: -20 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              stagger: 0.08,
+              ease: "power3.out",
+            }
+          );
+        },
+        once: true,
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [userData]);
 
   const fetchGitHubData = async () => {
     if (!username) return;
@@ -55,9 +203,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-black via-neutral-900 to-neutral-800 text-white flex flex-col items-center px-4 md:px-12 pt-4 md:pt-0">
-      <Header/>
+      <Header ref={headerRef}/>
       <div className="w-full max-w-5xl mt-4 md:mt-0">
-        <header className="mb-6 md:mb-8">
+        <header className="mb-6 md:mb-8" ref={titleRef}>
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-[saurav] font-extrabold bg-gradient-to-r text-purple-200 text-center">
             Github Glance
           </h1>
@@ -65,7 +213,7 @@ export default function Home() {
         </header>
 
         {/* Search Card */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 md:p-6 bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-sm shadow-md">
+        <div ref={searchRef} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-4 md:p-6 bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-sm shadow-md">
           <input
             type="text"
             placeholder="e.g. pandurangzure"
@@ -90,7 +238,7 @@ export default function Home() {
 
         {/* Profile Section */}
         {userData && (
-          <div className="mt-6 md:mt-8 w-full bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-md p-4 md:p-6 shadow-lg">
+          <div ref={profileRef} className="mt-6 md:mt-8 w-full bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-md p-4 md:p-6 shadow-lg">
             <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
               <img
                 src={userData.avatar_url}
@@ -115,11 +263,11 @@ export default function Home() {
         </div>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mt-4 md:mt-6 text-xs sm:text-sm text-neutral-300">
-              <div className="bg-neutral-900/40 p-3 rounded-lg">Location: <div className="font-medium text-white">{userData.location || 'N/A'}</div></div>
-              <div className="bg-neutral-900/40 p-3 rounded-lg">Company: <div className="font-medium text-white">{userData.company || 'N/A'}</div></div>
-              <div className="bg-neutral-900/40 p-3 rounded-lg">Joined: <div className="font-medium text-white">{new Date(userData.created_at).toLocaleDateString()}</div></div>
-              <div className="bg-neutral-900/40 p-3 rounded-lg">Email: <div className="font-medium text-white">{userData.email || 'N/A'}</div></div>
+            <div ref={profileSectionRef} className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mt-4 md:mt-6 text-xs sm:text-sm text-neutral-300">
+              <div className="stat-box bg-neutral-900/40 p-3 rounded-lg" ref={(el) => { if (el) statsRef.current[0] = el; }}>Location: <div className="font-medium text-white">{userData.location || 'N/A'}</div></div>
+              <div className="stat-box bg-neutral-900/40 p-3 rounded-lg" ref={(el) => { if (el) statsRef.current[1] = el; }}>Company: <div className="font-medium text-white">{userData.company || 'N/A'}</div></div>
+              <div className="stat-box bg-neutral-900/40 p-3 rounded-lg" ref={(el) => { if (el) statsRef.current[2] = el; }}>Joined: <div className="font-medium text-white">{new Date(userData.created_at).toLocaleDateString()}</div></div>
+              <div className="stat-box bg-neutral-900/40 p-3 rounded-lg" ref={(el) => { if (el) statsRef.current[3] = el; }}>Email: <div className="font-medium text-white">{userData.email || 'N/A'}</div></div>
             </div>
           </div>
         )}
@@ -134,8 +282,14 @@ export default function Home() {
             <h3 className="text-lg sm:text-xl font-semibold mb-4 text-white">📂 Repositories</h3>
 
             <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {repos.map((repo) => (
-                <div key={repo.id} className="bg-neutral-800/30 border border-neutral-700/30 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition">
+              {repos.map((repo, index) => (
+                <div 
+                  key={repo.id} 
+                  ref={(el) => {
+                    if (el) repoCardsRef.current[index] = el;
+                  }}
+                  className="bg-neutral-800/30 border border-neutral-700/30 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition"
+                >
                   <a href={repo.html_url} target="_blank" className="text-base md:text-lg font-semibold text-indigo-200 hover:underline break-words">{repo.name}</a>
                   <p className="text-neutral-300 text-xs md:text-sm mt-2 line-clamp-2">{repo.description || 'No description provided'}</p>
 

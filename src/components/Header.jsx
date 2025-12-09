@@ -3,19 +3,66 @@
 import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 import { HiMenu, HiX } from "react-icons/hi";
-import { useState } from "react";
+import { useState, forwardRef, useEffect } from "react";
+import gsap from "gsap";
 import logo from '../assets/logo.png'
 
 
-export default function Header() {
+const Header = forwardRef((props, ref) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Animate header on mount
+  useEffect(() => {
+    // Get the header element from the ref
+    const headerElement = ref?.current;
+    if (!headerElement) return;
+
+    gsap.fromTo(
+      headerElement,
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }
+    );
+
+    // Animate nav links stagger
+    const navLinks = headerElement.querySelectorAll("a:not([aria-label])");
+    if (navLinks.length > 0) {
+      gsap.fromTo(
+        navLinks,
+        { opacity: 0, x: -10 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+          delay: 0.3,
+        }
+      );
+    }
+  }, []);
+
   const toggleMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
+    setMobileMenuOpen((prev) => {
+      const newState = !prev;
+      
+      // Animate menu button rotation
+      setTimeout(() => {
+        const menuBtn = document.querySelector("[aria-label='Toggle menu']");
+        if (menuBtn) {
+          gsap.to(menuBtn, {
+            rotate: newState ? 90 : 0,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        }
+      }, 0);
+      
+      return newState;
+    });
   };
 
   return (
-    <header className="w-screen relative z-50 top-0 b  text-white my-4">
+    <header ref={ref} className="w-screen relative z-50 top-0 b  text-white my-4">
       <div className="w-screen mx-auto flex items-center justify-between px-6 py-4">
         
         <Link href="/" className="text-2xl md:text-4xl font-bold text-white text-pretty font-[saurav] hover:text-purple-400 transition">
@@ -58,7 +105,29 @@ export default function Header() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <nav className="md:hidden  px-6 py-4 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200">
+        <nav 
+          className="md:hidden px-6 py-4 space-y-3"
+          ref={(el) => {
+            if (el && mobileMenuOpen) {
+              gsap.fromTo(
+                el,
+                { opacity: 0, y: -10 },
+                { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+              );
+              gsap.fromTo(
+                el.querySelectorAll("a, span"),
+                { opacity: 0, x: -15 },
+                {
+                  opacity: 1,
+                  x: 0,
+                  duration: 0.4,
+                  stagger: 0.08,
+                  ease: "power2.out",
+                }
+              );
+            }
+          }}
+        >
           <Link
             href="/Hero"
             onClick={() => setMobileMenuOpen(false)}
@@ -86,4 +155,7 @@ export default function Header() {
       )}
     </header>
   );
-}
+});
+
+Header.displayName = "Header";
+export default Header;
