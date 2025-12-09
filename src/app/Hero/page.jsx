@@ -53,121 +53,153 @@ export default function Home() {
   
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-8">
-      <h1 className="text-4xl font-extrabold text-blue-700 mb-8">
-        🔍 GitHub Profile Finder
-      </h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 md:p-10">
+  <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-10 text-center">
+    🔍 GitHub Profile Finder
+  </h1>
 
-      {/* Input */}
-      <div className="flex gap-2 mb-6">
-        <input
-          type="text"
-          placeholder="Enter GitHub username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="px-4 py-2 border rounded-lg w-64 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  {/* Input */}
+  <div className="flex flex-col sm:flex-row gap-3 mb-8 w-full sm:w-auto">
+    <input
+      type="text"
+      placeholder="Enter GitHub username"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      className="px-4 py-2 border rounded-lg w-full sm:w-72 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <button
+      onClick={fetchGitHubData}
+      className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+    >
+      Search
+    </button>
+  </div>
+
+  {/* Loading */}
+  {loading && <p className="text-gray-600 text-lg">Fetching data...</p>}
+
+  {/* Error */}
+  {error && <p className="text-red-600 font-semibold text-lg">{error}</p>}
+
+  {/* Profile Section */}
+  {userData && (
+  <>
+    {/* Dashboard Profile Section */}
+    <div className="w-full bg-white rounded-2xl p-8 shadow-md border border-gray-200">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+
+        {/* Avatar */}
+        <img
+          src={userData.avatar_url}
+          alt="avatar"
+          className="w-40 h-40 rounded-full border-4 border-gray-300 object-cover"
         />
-        <button
-          onClick={fetchGitHubData}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          Search
-        </button>
+
+        {/* Text Section */}
+        <div className="flex-1">
+          <h2 className="text-3xl font-extrabold">{userData.name}</h2>
+          <p className="text-gray-600 font-medium text-lg">{userData.login}</p>
+
+          <p className="text-gray-700 mt-3 max-w-xl leading-relaxed">
+            {userData.bio}
+          </p>
+
+          {/* Followers Row */}
+          <div className="flex gap-6 mt-4 text-gray-800 font-semibold">
+            <span>Followers : {userData.followers}</span>
+            <span>Following : {userData.following}</span>
+          </div>
+        </div>
+
       </div>
 
-      {/* Loading */}
-      {loading && <p className="text-gray-600">Fetching data...</p>}
+      {/* Extra Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10 text-gray-800 font-medium text-center">
+        <span>Followers : {userData.followers}</span>
+        <span>Following : {userData.following}</span>
+        <span>Repos : {userData.public_repos}</span>
+        <span>Location : {userData.location || "N/A"}</span>
 
-      {/* Error */}
-      {error && <p className="text-red-600 font-semibold">{error}</p>}
-
-      {/* Profile Section */}
-      {userData && (
-        <div className="bg-white shadow-md rounded-lg p-6 w-96 mb-6 text-center">
-          <img
-            src={userData.avatar_url}
-            alt="avatar"
-            className="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-blue-500"
-          />
-          <h2 className="text-2xl font-semibold">{userData.name}</h2>
-          <p className="text-gray-600">@{userData.login}</p>
-          <p className="mt-2">{userData.bio}</p>
-          <div className="">
-            <div className="flex justify-around mt-4 text-sm font-medium">
-            <br /><span>👥 {userData.followers} Followers</span>
-            <br /><span>➡️ {userData.following} Following</span>
-            <br /><span>📦 {userData.public_repos} Repos</span>
-            <br /><span>📦 {userData.email} Email</span>
-            <br /><span>📦 {userData.blog} Blog</span>
-            
-          </div>
-          <div className="">
-            <br /><span>📦 {userData.stargazers_count} Total star</span>
-            <br /><span>📦 {userData.location} Location</span>
-            <br /><span>📦 {userData.company} Company</span>
-            <br /><span>📦 {userData.created_at} created on date</span>
-            <br /><span>📦 {userData.updated_at} Last profile update</span>
-          </div>
-          </div>
-        </div>
-      )}
-
-      {/* Repo Section */}
-      {repos.length > 0 && (
-        <div className="w-full ">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">📂 Repositories</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {repos.map((repo) => (
-              <div
-                key={repo.id}
-                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition"
-              >
-                <a
-                  href={repo.html_url}
-                  target="_blank"
-                  className="text-lg font-semibold text-blue-600 hover:underline"
-                >
-                  {repo.name}
-                </a>
-                <p className="text-gray-600 text-sm mt-2">
-                    {repo.description || "No description provided"}
-                  </p>
-                
-                <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-700">
-                    <span>🌐 {repo.language || "N/A"}</span>
-                    <span>⭐ {repo.stargazers_count}</span>
-                    <span>🍴 {repo.forks_count}</span>
-                    <span>👀 {repo.watchers_count}</span>
-                    <span>🐛 {repo.open_issues_count}</span>
-                  </div>
-                  <div className="flex justify-between items-end">
-                   <div>
-                     <p className="text-xs text-gray-500 mt-2">
-                    Created: {new Date(repo.created_at).toLocaleDateString()} | Updated:{" "}
-                    {new Date(repo.updated_at).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    License: {repo.license?.name || "No license"}
-                  </p>
-                  <p>Size: {repo.sizeFormatted}</p>
-                   </div>
-                  <a href={repo.html_url}><div className="flex justify-end text-3xl"><FaGithub /></div></a>
-
-                  </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-3">
-  <img 
-    src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`} 
-    alt="profile views"
-  />
-</div>
-<p>kasodj</p>
-<RecentRepos username={username}/>
+        <span>Company : {userData.company || "N/A"}</span>
+        <span>Joined : {new Date(userData.created_at).toLocaleDateString()}</span>
+        <span>Updated : {new Date(userData.updated_at).toLocaleDateString()}</span>
+        <span>Email : {userData.email || "N/A"}</span>
+      </div>
     </div>
+  </>
+)}
+
+
+  {/* Repo Section */}
+  {repos.length > 0 && (
+    <div className="w-full max-w-6xl mt-6">
+      <h2 className="text-3xl font-bold text-gray-800 mb-6">📂 Repositories</h2>
+
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {repos.map((repo) => (
+          <div
+            key={repo.id}
+            className="bg-white p-6 rounded-xl shadow-md border hover:shadow-xl transition"
+          >
+            <a
+              href={repo.html_url}
+              target="_blank"
+              className="text-xl font-semibold text-blue-600 hover:underline"
+            >
+              {repo.name}
+            </a>
+
+            <p className="text-gray-600 text-sm mt-2">
+              {repo.description || "No description provided"}
+            </p>
+
+            <div className="flex flex-wrap gap-3 mt-4 text-sm text-gray-700">
+              <span>🌐 {repo.language || "N/A"}</span>
+              <span>⭐ {repo.stargazers_count}</span>
+              <span>🍴 {repo.forks_count}</span>
+              <span>👀 {repo.watchers_count}</span>
+              <span>🐛 {repo.open_issues_count}</span>
+            </div>
+
+            <div className="mt-4 flex justify-between items-end">
+              <div>
+                <p className="text-xs text-gray-500">
+                  Created: {new Date(repo.created_at).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Updated: {new Date(repo.updated_at).toLocaleDateString()}
+                </p>
+                <p className="text-xs text-gray-600">
+                  License: {repo.license?.name || "No license"}
+                </p>
+                <p className="text-xs text-gray-600">
+                  Size: {repo.sizeFormatted || repo.size}
+                </p>
+              </div>
+
+              <a href={repo.html_url}>
+                <div className="text-3xl text-gray-800 hover:text-black">
+                  <FaGithub />
+                </div>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* Profile Views */}
+  <div className="mt-8">
+    <img
+      src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`}
+      alt="profile views"
+      className="mx-auto"
+    />
+  </div>
+
+  <RecentRepos username={username} />
+</div>
+
   );
 }
