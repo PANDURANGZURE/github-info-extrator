@@ -21,8 +21,8 @@ export function Main() {
      
           <div className="flex flex-col justify-center w-screen items-center text-center">
             
-          <h1 className="relative z-10 text-blue-200 font-[saurav] text-4xl md:text-8xl mb-3 ">Get a quick peek into any </h1>
-          <h1 className="relative z-10 text-blue-200 font-[saurav] text-4xl md:text-8xl ">GitHub profile.</h1>
+          <h1 className="relative z-10 text-blue-100 font-[saurav] text-4xl md:text-8xl mb-3 ">Get a quick peek into any </h1>
+          <h1 className="relative z-10 text-blue-100 font-[saurav] text-4xl md:text-8xl ">GitHub profile.</h1>
           
           
 
@@ -32,7 +32,7 @@ export function Main() {
 
           <div className="relative z-10 flex justify-center mt-5 gap-5 ">
             <Link href='/Hero'><HoverBorderGradient className='hover:scale-105 transition md:mx-8 duration-400'><div className="flex justify-center items-center cursor-pointer ">
-              <span className="text-lg font-bold font-sans  bg-clip-text text-transparent bg-gradient-to-b from-neutral-200 to-neutral-500">Profile Info</span>
+              <span className="text-lg font-bold font-sans  bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-500">Profile Info</span>
               </div></HoverBorderGradient></Link>
                           
           </div>
