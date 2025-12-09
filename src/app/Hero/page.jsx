@@ -19,6 +19,7 @@ export default function Home() {
   const profileRef = useRef(null);
   const statsRef = useRef([]);
   const profileSectionRef = useRef(null);
+  const repoContainerRef = useRef(null);
 
   // Helper to format repo size (GitHub API returns size in KB)
   function formatRepoSize(size) {
@@ -69,6 +70,11 @@ export default function Home() {
           duration: 0.6,
           stagger: 0.1,
           ease: "power3.out",
+          scrollTrigger: {
+            trigger: repoContainerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
         }
       );
       
@@ -94,6 +100,10 @@ export default function Home() {
         }
       });
     }
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
   }, [repos]);
 
   // Animate profile section entrance
@@ -278,7 +288,7 @@ export default function Home() {
 
         {/* Repo Section */}
         {repos.length > 0 && (
-          <div className="mt-6 md:mt-8 w-full">
+          <div ref={repoContainerRef} className="mt-6 md:mt-8 w-full">
             <h3 className="text-lg sm:text-xl font-semibold mb-4 text-white">📂 Repositories</h3>
 
             <div className="grid gap-4 md:gap-6 sm:grid-cols-2 lg:grid-cols-3">

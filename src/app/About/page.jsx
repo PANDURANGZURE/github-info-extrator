@@ -11,7 +11,7 @@ export default function About() {
       <main className="max-w-5xl mx-auto px-4 py-16">
         {/* Hero Section */}
         <section className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-4 animate-fadeIn">About GitHubGlance</h1>
+          <h1 className="text-5xl font-bold mb-4 animate-fadeIn">About <span className="font-[saurav] text-purple-200">GitHub Glance</span></h1>
           <p className="text-lg text-gray-400 animate-fadeIn delay-200">
             GitHubGlance is a modern web app built with Next.js & Tailwind CSS, making it easy to explore GitHub profiles and repositories in style.
           </p>
@@ -31,9 +31,9 @@ export default function About() {
 
           <div className="animate-slideInRight">
             <img
-              src="/github-screenshot.png" // replace with your screenshot
+              src="https://github.com/PANDURANGZURE/project-img/blob/main/assets/project/githubglance.png?raw=true" // replace with your screenshot
               alt="GitHubGlance screenshot"
-              className="rounded-xl shadow-2xl border border-gray-700"
+              className=" shadow-2xl border border-gray-700"
             />
           </div>
         </section>
@@ -42,16 +42,16 @@ export default function About() {
         <section className="text-center mb-16 animate-fadeIn">
           <h2 className="text-3xl font-semibold mb-6">Features</h2>
           <div className="grid sm:grid-cols-2 gap-6 text-gray-400">
-            <div className="p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
+            <div className="p-4 bg-black border  rounded-xl hover:bg-gray-800 transition-all">
               • View GitHub user profiles and stats
             </div>
-            <div className="p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
+            <div className="p-4 bg-black border  rounded-xl hover:bg-gray-800 transition-all">
               • Explore repositories with stars, forks & languages
             </div>
-            <div className="p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
+            <div className="p-4 bg-black border  rounded-xl hover:bg-gray-800 transition-all">
               • Instant search for users & repos
             </div>
-            <div className="p-4 bg-gray-900 rounded-xl hover:bg-gray-800 transition-all">
+            <div className="p-4 bg-black border  rounded-xl hover:bg-gray-800 transition-all">
               • Dark & responsive modern UI
             </div>
           </div>
@@ -61,13 +61,13 @@ export default function About() {
         <section className="text-center animate-fadeIn delay-200">
           <h2 className="text-3xl font-semibold mb-4">Connect with Me</h2>
           <div className="flex justify-center space-x-8 text-3xl text-gray-400">
-            <a href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+            <a href="https://github.com/PANDURANGZURE" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
               <FaGithub />
             </a>
-            <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
+            <a href="https://www.linkedin.com/in/pandurang-santosh-zure-au3112/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
               <FaLinkedin />
             </a>
-            <a href="https://instagram.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors">
+            <a href="https://www.instagram.com/_anonymous_3112_/" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition-colors">
               <FaInstagram />
             </a>
           </div>

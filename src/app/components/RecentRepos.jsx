@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaGithub } from "react-icons/fa";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function RecentRepos({ username }) {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const repoCardsRef = useRef([]);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     // reset state when username changes
@@ -52,6 +58,55 @@ export default function RecentRepos({ username }) {
     };
   }, [username]);
 
+  // Animate repo cards with scroll trigger
+  useEffect(() => {
+    if (repoCardsRef.current.length > 0 && containerRef.current) {
+      // Staggered entrance animation with scroll trigger
+      gsap.fromTo(
+        repoCardsRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // Add hover scale animation to each card
+      repoCardsRef.current.forEach((card) => {
+        if (card) {
+          card.addEventListener("mouseenter", () => {
+            gsap.to(card, {
+              scale: 1.05,
+              boxShadow: "0 0 25px rgba(99, 102, 241, 0.4)",
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          card.addEventListener("mouseleave", () => {
+            gsap.to(card, {
+              scale: 1,
+              boxShadow: "0 0 0px rgba(99, 102, 241, 0)",
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+        }
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [repos]);
+
   if (!username) return <p className="text-neutral-400 text-sm">Enter a GitHub username to see recent repos.</p>;
   if (loading) return <p className="text-neutral-400 text-sm">Loading recent repos…</p>;
   if (error)
@@ -73,14 +128,17 @@ export default function RecentRepos({ username }) {
   if (repos.length === 0) return <p className="text-neutral-400 text-sm">No recent repos found for {username}.</p>;
 
   return (
-    <div className="w-full">
+    <div ref={containerRef} className="w-full">
       <h2 className="text-lg sm:text-xl font-semibold text-white mb-4">
         ⏱️ Recently Pushed by <span className="text-indigo-300">{username}</span>
       </h2>
       <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-        {repos.map((repo) => (
+        {repos.map((repo, index) => (
           <a
             key={repo.id}
+            ref={(el) => {
+              if (el) repoCardsRef.current[index] = el;
+            }}
             href={repo.html_url}
             target="_blank"
             rel="noopener noreferrer"
