@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import RecentRepos from "../components/RecentRepos";
+import Header from "@/components/Header";
 
 
 
@@ -53,153 +54,117 @@ export default function Home() {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center p-4 md:p-10">
-  <h1 className="text-4xl md:text-5xl font-extrabold text-blue-700 mb-10 text-center">
-    🔍 GitHub Profile Finder
-  </h1>
+    <div className="min-h-screen w-full bg-gradient-to-br from-black via-neutral-900 to-neutral-800 text-white flex flex-col items-center px-6 md:px-12">
+      <Header/>
+      <div className="w-full max-w-5xl">
+        <header className="mb-8">
+          <h1 className="text-4xl font-[saurav] md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-pink-300 to-yellow-300 text-center">
+            
+          </h1>
+          <h1 className="text-center text-6xl font-[saurav]">
+            Github Glance
+          </h1>
+          <p className="text-center text-sm text-neutral-400 mt-2">Search any GitHub profile and explore repos with a clean, dark UI.</p>
+        </header>
 
-  {/* Input */}
-  <div className="flex flex-col sm:flex-row gap-3 mb-8 w-full sm:w-auto">
-    <input
-      type="text"
-      placeholder="Enter GitHub username"
-      value={username}
-      onChange={(e) => setUsername(e.target.value)}
-      className="px-4 py-2 border rounded-lg w-full sm:w-72 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    />
-    <button
-      onClick={fetchGitHubData}
-      className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
-    >
-      Search
-    </button>
-  </div>
+        {/* Search Card */}
+        <div className="flex items-center gap-4 p-4 md:p-6 bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-sm shadow-md">
+          <input
+            type="text"
+            placeholder="e.g. torvalds or paste full profile URL"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="flex-1 bg-transparent placeholder-neutral-400 text-white px-4 py-3 rounded-lg border border-neutral-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
 
-  {/* Loading */}
-  {loading && <p className="text-gray-600 text-lg">Fetching data...</p>}
-
-  {/* Error */}
-  {error && <p className="text-red-600 font-semibold text-lg">{error}</p>}
-
-  {/* Profile Section */}
-  {userData && (
-  <>
-    {/* Dashboard Profile Section */}
-    <div className="w-full bg-white rounded-2xl p-8 shadow-md border border-gray-200">
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-
-        {/* Avatar */}
-        <img
-          src={userData.avatar_url}
-          alt="avatar"
-          className="w-40 h-40 rounded-full border-4 border-gray-300 object-cover"
-        />
-
-        {/* Text Section */}
-        <div className="flex-1">
-          <h2 className="text-3xl font-extrabold">{userData.name}</h2>
-          <p className="text-gray-600 font-medium text-lg">{userData.login}</p>
-
-          <p className="text-gray-700 mt-3 max-w-xl leading-relaxed">
-            {userData.bio}
-          </p>
-
-          {/* Followers Row */}
-          <div className="flex gap-6 mt-4 text-gray-800 font-semibold">
-            <span>Followers : {userData.followers}</span>
-            <span>Following : {userData.following}</span>
-          </div>
+          <button
+            onClick={fetchGitHubData}
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-500 to-pink-500 hover:from-indigo-600 hover:to-pink-600 text-white px-5 py-3 rounded-lg shadow-lg transform transition active:scale-95"
+          >
+            Search
+          </button>
         </div>
 
-      </div>
+        {/* Status */}
+        <div className="mt-4">
+          {loading && <p className="text-neutral-300">Fetching data...</p>}
+          {error && <p className="text-rose-400 font-semibold">{error}</p>}
+        </div>
 
-      {/* Extra Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-10 text-gray-800 font-medium text-center">
-        <span>Followers : {userData.followers}</span>
-        <span>Following : {userData.following}</span>
-        <span>Repos : {userData.public_repos}</span>
-        <span>Location : {userData.location || "N/A"}</span>
+        {/* Profile Section */}
+        {userData && (
+          <div className="mt-8 w-full bg-neutral-800/40 border border-neutral-700/40 rounded-2xl backdrop-blur-md p-6 shadow-lg">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+              <img
+                src={userData.avatar_url}
+                alt="avatar"
+                className="w-36 h-36 rounded-full ring-2 ring-indigo-500 object-cover"
+              />
 
-        <span>Company : {userData.company || "N/A"}</span>
-        <span>Joined : {new Date(userData.created_at).toLocaleDateString()}</span>
-        <span>Updated : {new Date(userData.updated_at).toLocaleDateString()}</span>
-        <span>Email : {userData.email || "N/A"}</span>
-      </div>
-    </div>
-  </>
-)}
+              <div className="flex-1">
+                <h2 className="text-2xl md:text-3xl font-bold">{userData.name || userData.login}</h2>
+                <p className="text-neutral-400 mt-1">@{userData.login}</p>
 
+                <p className="text-neutral-300 mt-4 max-w-xl leading-relaxed">{userData.bio || 'No bio available.'}</p>
 
-  {/* Repo Section */}
-  {repos.length > 0 && (
-    <div className="w-full max-w-6xl mt-6">
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">📂 Repositories</h2>
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {repos.map((repo) => (
-          <div
-            key={repo.id}
-            className="bg-white p-6 rounded-xl shadow-md border hover:shadow-xl transition"
-          >
-            <a
-              href={repo.html_url}
-              target="_blank"
-              className="text-xl font-semibold text-blue-600 hover:underline"
-            >
-              {repo.name}
-            </a>
-
-            <p className="text-gray-600 text-sm mt-2">
-              {repo.description || "No description provided"}
-            </p>
-
-            <div className="flex flex-wrap gap-3 mt-4 text-sm text-gray-700">
-              <span>🌐 {repo.language || "N/A"}</span>
-              <span>⭐ {repo.stargazers_count}</span>
-              <span>🍴 {repo.forks_count}</span>
-              <span>👀 {repo.watchers_count}</span>
-              <span>🐛 {repo.open_issues_count}</span>
+                <div className="flex gap-6 mt-4 text-sm text-neutral-300">
+                  <span>Followers: <span className="font-semibold text-white">{userData.followers}</span></span>
+                  <span>Following: <span className="font-semibold text-white">{userData.following}</span></span>
+                  <span>Repos: <span className="font-semibold text-white">{userData.public_repos}</span></span>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-4 flex justify-between items-end">
-              <div>
-                <p className="text-xs text-gray-500">
-                  Created: {new Date(repo.created_at).toLocaleDateString()}
-                </p>
-                <p className="text-xs text-gray-500">
-                  Updated: {new Date(repo.updated_at).toLocaleDateString()}
-                </p>
-                <p className="text-xs text-gray-600">
-                  License: {repo.license?.name || "No license"}
-                </p>
-                <p className="text-xs text-gray-600">
-                  Size: {repo.sizeFormatted || repo.size}
-                </p>
-              </div>
-
-              <a href={repo.html_url}>
-                <div className="text-3xl text-gray-800 hover:text-black">
-                  <FaGithub />
-                </div>
-              </a>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-sm text-neutral-300">
+              <div className="bg-neutral-900/40 p-3 rounded-lg">Location: <div className="font-medium text-white">{userData.location || 'N/A'}</div></div>
+              <div className="bg-neutral-900/40 p-3 rounded-lg">Company: <div className="font-medium text-white">{userData.company || 'N/A'}</div></div>
+              <div className="bg-neutral-900/40 p-3 rounded-lg">Joined: <div className="font-medium text-white">{new Date(userData.created_at).toLocaleDateString()}</div></div>
+              <div className="bg-neutral-900/40 p-3 rounded-lg">Email: <div className="font-medium text-white">{userData.email || 'N/A'}</div></div>
             </div>
           </div>
-        ))}
+        )}
+
+        {/* Repo Section */}
+        {repos.length > 0 && (
+          <div className="mt-8 w-full">
+            <h3 className="text-xl font-semibold mb-4 text-white">📂 Repositories</h3>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {repos.map((repo) => (
+                <div key={repo.id} className="bg-neutral-800/30 border border-neutral-700/30 rounded-xl p-5 shadow-sm hover:shadow-lg transform hover:-translate-y-1 transition">
+                  <a href={repo.html_url} target="_blank" className="text-lg font-semibold text-indigo-200 hover:underline">{repo.name}</a>
+                  <p className="text-neutral-300 text-sm mt-2">{repo.description || 'No description provided'}</p>
+
+                  <div className="flex flex-wrap gap-3 mt-4 text-sm text-neutral-300">
+                    <span>🌐 {repo.language || 'N/A'}</span>
+                    <span>⭐ {repo.stargazers_count}</span>
+                    <span>🍴 {repo.forks_count}</span>
+                    <span>🐛 {repo.open_issues_count}</span>
+                    <span>Size: {repo.sizeFormatted || repo.size}</span>
+                  </div>
+
+                  <div className="mt-4 flex justify-between items-end">
+                    <div className="text-xs text-neutral-400">
+                      <div>Created: {new Date(repo.created_at).toLocaleDateString()}</div>
+                      <div>Updated: {new Date(repo.updated_at).toLocaleDateString()}</div>
+                    </div>
+                    <a href={repo.html_url} target="_blank" className="text-2xl text-neutral-200 hover:text-white"><FaGithub /></a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Profile Views */}
+        <div className="mt-8 flex justify-center">
+          <img src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`} alt="profile views" className="" />
+        </div>
+
+        <div className="mt-8">
+          <RecentRepos username={username} />
+        </div>
       </div>
     </div>
-  )}
-
-  {/* Profile Views */}
-  <div className="mt-8">
-    <img
-      src={`https://komarev.com/ghpvc/?username=${username}&label=Profile%20views&color=0e75b6&style=flat`}
-      alt="profile views"
-      className="mx-auto"
-    />
-  </div>
-
-  <RecentRepos username={username} />
-</div>
-
   );
 }
