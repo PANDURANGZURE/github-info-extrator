@@ -10,7 +10,7 @@ export default function Header() {
     <header className="w-full relative z-10 top-0 bg-transparent text-white shadow-md  ">
           <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
             
-            <Link href="/" className="text-2xl md:text-4xl font-bold mt-5 text-white text-pretty font-[saurav] hover:text-blue-200 transition">
+            <Link href="/" className="text-2xl md:text-4xl font-bold mt-5 text-white text-pretty font-[saurav] hover:text-purple-400 transition">
               Github Glance
             </Link>
     
@@ -18,13 +18,13 @@ export default function Header() {
             <nav className="flex items-center space-x-6">
               <Link
                 href="/Hero"
-                className="hover:text-blue-200 text-neutral-500 transition"
+                className="hover:text-purple-400 text-neutral-500 transition"
               >
                 Profile Info
               </Link>
               <Link
                 href="/GithubRepos"
-                className="hover:text-blue-200 text-neutral-500 transition"
+                className="hover:text-purple-400 text-neutral-500 transition"
               >
                 About
               </Link>
@@ -32,7 +32,7 @@ export default function Header() {
                 href="https://github.com/your-username"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-blue-200 transition text-neutral-500"
+                className="hover:text-purple-400 transition text-neutral-500"
               >
                 <FaGithub size={22} />
               </a>
