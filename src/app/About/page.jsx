@@ -2,6 +2,7 @@
 import React from "react";
 import Header from "@/components/Header";
 import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
+import Footer from "../components/Footer";
 
 export default function About() {
   return (
@@ -31,7 +32,7 @@ export default function About() {
 
           <div className="animate-slideInRight">
             <img
-              src="https://github.com/PANDURANGZURE/project-img/blob/main/assets/project/githubglance.png?raw=true" // replace with your screenshot
+              src="https://github.com/PANDURANGZURE/project-img/blob/main/assets/project/gg2.png?raw=true" // replace with your screenshot
               alt="GitHubGlance screenshot"
               className=" shadow-2xl border border-gray-700"
             />
@@ -73,6 +74,7 @@ export default function About() {
           </div>
         </section>
       </main>
+      <Footer/>
 
       {/* Tailwind Animations */}
       <style jsx>{`

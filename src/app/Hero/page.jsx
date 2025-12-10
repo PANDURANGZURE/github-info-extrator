@@ -6,6 +6,7 @@ import RecentRepos from "../components/RecentRepos";
 import Header from "@/components/Header";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import Footer from "../components/Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -329,6 +330,7 @@ export default function Home() {
 
         
       </div>
+      
     </div>
   );
 }
